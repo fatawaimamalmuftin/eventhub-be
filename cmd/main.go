@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/router"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println("init")
+	r := gin.Default()
+
+	router.MainRouter(r)
+
+	r.Run(":1212")
 }
