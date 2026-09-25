@@ -1,3 +1,5 @@
 *.env
 *.air.toml
 tes.http
+TabelList.sql
+tmp

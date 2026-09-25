@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/config"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/router"
 	"github.com/gin-gonic/gin"
 )
@@ -8,7 +11,14 @@ import (
 func main() {
 	r := gin.Default()
 
-	router.MainRouter(r)
+	db, err := config.DBconfig()
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	r.Run(":1212")
+	r.GET("/ping")
+
+	router.MainRouter(r, db)
+
+	r.Run(":5678")
 }

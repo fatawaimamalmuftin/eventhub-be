@@ -9,5 +9,5 @@ import (
 func MainRouter(r *gin.Engine, pool *pgxpool.Pool) {
 	r.Use(middleware.Cors)
 
-	AuthRouter(r, pool)
+	authRouter(r, pool)
 }

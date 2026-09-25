@@ -1,13 +1,15 @@
 package router
 
 import (
-	"github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
+	"fmt"
+
+	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func AuthRouter(r *gin.Engine, db *pgxpool.Pool) {
+func authRouter(r *gin.Engine, db *pgxpool.Pool) {
 	auth := r.Group("/auth")
 
 	auth.GET("regis", func(c *gin.Context) {
@@ -16,4 +18,5 @@ func AuthRouter(r *gin.Engine, db *pgxpool.Pool) {
 			return
 		}
 	})
+	fmt.Println(db)
 }
