@@ -1,22 +1,19 @@
 package router
 
 import (
-	"fmt"
-
-	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
-	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/handler"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func authRouter(r *gin.Engine, db *pgxpool.Pool) {
-	auth := r.Group("/auth")
 
-	auth.GET("regis", func(c *gin.Context) {
-		if e := c.ShouldBindBodyWithJSON(&dto.Regis{}); e != nil {
-			c.Error(cuserror.ErrBinding)
-			return
-		}
-	})
-	fmt.Println(db)
+	Auth := r.Group("/auth")
+
+	rr := repo.RegisRepo(db)
+	rs := service.RegisService(rr)
+	rh := handler.RegisHandler(rs)
+	Auth.POST("regis", rh.Regis)
 }
