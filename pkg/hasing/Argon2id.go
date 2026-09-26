@@ -70,7 +70,7 @@ func (h *HashConfig) GenPasHash(pass string) (string, error) {
 
 	completeHash := fmt.Sprintf(
 		"$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
-		argon2.Version, h.Memory, h.Time, h.Thread, base64hash, base64salt,
+		argon2.Version, h.Memory, h.Time, h.Thread, base64salt, base64hash,
 	)
 
 	return completeHash, nil
