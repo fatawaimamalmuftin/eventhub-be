@@ -1,5 +1,3 @@
 package cuserror
 
-import "errors"
-
-var ErrBinding = errors.New("failed to bind")
+var ErrBinding = "failed to bind"
