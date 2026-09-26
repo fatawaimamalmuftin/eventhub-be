@@ -18,6 +18,21 @@ func RegisRepo(db *pgxpool.Pool) *DbRegisRepo {
 	}
 }
 
+func (d *DbRegisRepo) IsExist(c context.Context, newUser dto.Regis) (int, error) {
+	q := "SELECT (id_users) FROM users WHERE full_name = $1 OR email = $2;"
+	arg := []any{newUser.FullName, newUser.Email}
+
+	var id int
+
+	err := d.db.QueryRow(c, q, arg...).Scan(&id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
 func (d *DbRegisRepo) NewAccount(c context.Context, newUser dto.Regis) error {
 	q := "INSERT INTO users (full_name,email,password) VALUES ($1, $2, $3);"
 	arg := []any{newUser.FullName, newUser.Email, newUser.Password}

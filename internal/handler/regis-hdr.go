@@ -4,8 +4,10 @@ import (
 	"context"
 	"net/http"
 
+	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5"
 )
 
 type IRegisSrv interface {
@@ -34,11 +36,36 @@ func (r *RegisHdr) Regis(c *gin.Context) {
 	}
 
 	if e := r.Rh.RegisSrv(&newUser, c.Request.Context()); e != nil {
-		c.JSON(http.StatusBadRequest, dto.Res{
-			Status:  false,
-			Message: e.Error(),
-		})
-		return
+		if e == cuserror.LenPas {
+			c.JSON(http.StatusBadRequest, dto.Res{
+				Status:  false,
+				Message: e.Error(),
+			})
+			return
+		}
+
+		if e == cuserror.ErrNoRowAffected {
+			c.JSON(http.StatusInternalServerError, dto.Res{
+				Status:  false,
+				Message: e.Error(),
+			})
+			return
+		}
+
+		if e == cuserror.ErrIsExist {
+			c.JSON(http.StatusConflict, dto.Res{
+				Status:  false,
+				Message: e.Error(),
+			})
+			return
+		}
+
+		if e == pgx.ErrNoRows {
+			c.JSON(http.StatusInternalServerError, dto.Res{
+				Status:  false,
+				Message: e.Error(),
+			})
+		}
 	}
 
 	c.JSON(http.StatusOK, dto.Res{

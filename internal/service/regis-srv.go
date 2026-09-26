@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"errors"
 	"strings"
 
 	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
+	"github.com/jackc/pgx/v5"
 )
 
 type RegisSrvS struct {
@@ -28,9 +30,19 @@ func (r *RegisSrvS) RegisSrv(newUser *dto.Regis, c context.Context) error {
 		return cuserror.InvalidEmail
 	}
 
+	id, err := r.Rs.IsExist(c, *newUser)
+
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+		return err
+	}
+
+	if id > 0 {
+		return cuserror.ErrIsExist
+	}
+
 	if e := r.Rs.NewAccount(c, *newUser); e != nil {
 		return e
 	}
-
+	
 	return nil
 }
