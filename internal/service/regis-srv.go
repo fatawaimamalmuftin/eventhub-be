@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
-	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/model"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
 	"github.com/jackc/pgx/v5"
 )
@@ -21,7 +21,7 @@ func RegisService(rp *repo.DbRegisRepo) *RegisSrvS {
 	}
 }
 
-func (r *RegisSrvS) RegisSrv(newUser *dto.Regis, c context.Context) error {
+func (r *RegisSrvS) RegisSrv(newUser *model.Regis, c context.Context) error {
 	if len(newUser.Password) < 6 {
 		return cuserror.LenPas
 	}
@@ -43,6 +43,6 @@ func (r *RegisSrvS) RegisSrv(newUser *dto.Regis, c context.Context) error {
 	if e := r.Rs.NewAccount(c, *newUser); e != nil {
 		return e
 	}
-	
+
 	return nil
 }

@@ -6,12 +6,13 @@ import (
 
 	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/model"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
 )
 
 type IRegisSrv interface {
-	RegisSrv(newUser *dto.Regis, c context.Context) error
+	RegisSrv(newUser *model.Regis, c context.Context) error
 }
 
 type RegisHdr struct {
@@ -25,7 +26,7 @@ func RegisHandler(rs IRegisSrv) *RegisHdr {
 }
 
 func (r *RegisHdr) Regis(c *gin.Context) {
-	newUser := dto.Regis{}
+	newUser := model.Regis{}
 
 	if e := c.ShouldBindBodyWithJSON(&newUser); e != nil {
 		c.JSON(http.StatusInternalServerError, dto.Res{

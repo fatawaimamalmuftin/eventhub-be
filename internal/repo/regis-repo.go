@@ -4,7 +4,7 @@ import (
 	"context"
 
 	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
-	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/model"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -18,7 +18,7 @@ func RegisRepo(db *pgxpool.Pool) *DbRegisRepo {
 	}
 }
 
-func (d *DbRegisRepo) IsExist(c context.Context, newUser dto.Regis) (int, error) {
+func (d *DbRegisRepo) IsExist(c context.Context, newUser model.Regis) (int, error) {
 	q := "SELECT (id_users) FROM users WHERE full_name = $1 OR email = $2;"
 	arg := []any{newUser.FullName, newUser.Email}
 
@@ -33,7 +33,7 @@ func (d *DbRegisRepo) IsExist(c context.Context, newUser dto.Regis) (int, error)
 	return id, nil
 }
 
-func (d *DbRegisRepo) NewAccount(c context.Context, newUser dto.Regis) error {
+func (d *DbRegisRepo) NewAccount(c context.Context, newUser model.Regis) error {
 	q := "INSERT INTO users (full_name,email,password) VALUES ($1, $2, $3);"
 	arg := []any{newUser.FullName, newUser.Email, newUser.Password}
 
