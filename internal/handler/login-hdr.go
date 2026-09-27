@@ -11,7 +11,7 @@ import (
 )
 
 type ILoginSrv interface {
-	LoginSrv(c context.Context, user *dto.Account) error
+	LoginSrv(c context.Context, user *dto.Account) (string, error)
 }
 
 type LoginHdr struct {
@@ -35,51 +35,45 @@ func (l *LoginHdr) Login(c *gin.Context) {
 		return
 	}
 
-	if err := l.Lh.LoginSrv(c.Request.Context(), &logind); err != nil {
-		if err == cuserror.LenPas {
+	token, errService := l.Lh.LoginSrv(c.Request.Context(), &logind)
+
+	if errService != nil {
+		if errService == cuserror.LenPas {
 			c.JSON(http.StatusBadRequest, dto.Res{
 				Status:  false,
-				Message: err.Error(),
+				Message: errService.Error(),
 			})
 			return
 		}
 
-		if errors.Is(err, cuserror.InvalidEmail) {
+		if errors.Is(errService, cuserror.InvalidEmail) {
 			c.JSON(http.StatusBadRequest, dto.Res{
 				Status:  false,
-				Message: err.Error(),
+				Message: errService.Error(),
 			})
 			return
 		}
 
-		if errors.Is(err, cuserror.InvalidCredential) {
+		if errors.Is(errService, cuserror.InvalidCredential) {
 			c.JSON(http.StatusUnauthorized, dto.Res{
 				Status:  false,
-				Message: err.Error(),
+				Message: errService.Error(),
 			})
 			return
 		}
 
-		// if err == pgx.ErrNoRows {
-		// 	c.JSON(http.StatusInternalServerError, dto.Res{
-		// 		Status:  false,
-		// 		Message: err.Error(),
-		// 	})
-		// 	return
-		// }
-
-		if errors.Is(err, cuserror.InvalidHash) {
+		if errors.Is(errService, cuserror.InvalidHash) {
 			c.JSON(http.StatusInternalServerError, dto.Res{
 				Status:  false,
-				Message: err.Error(),
+				Message: errService.Error(),
 			})
 			return
 		}
 
-		if errors.Is(err, cuserror.InternalError) {
+		if errors.Is(errService, cuserror.InternalError) {
 			c.JSON(http.StatusInternalServerError, dto.Res{
 				Status:  false,
-				Message: err.Error(),
+				Message: errService.Error(),
 			})
 			return
 		}
@@ -95,5 +89,6 @@ func (l *LoginHdr) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.Res{
 		Status:  true,
 		Message: "login success",
+		Data:    token,
 	})
 }
