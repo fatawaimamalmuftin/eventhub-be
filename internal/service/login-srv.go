@@ -9,7 +9,7 @@ import (
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
 	"github.com/fatawaimamalmuftin/eventhub-be/pkg/hasing"
-	"github.com/fatawaimamalmuftin/eventhub-be/pkg/jwt"
+	jwtpkg "github.com/fatawaimamalmuftin/eventhub-be/pkg/jwt"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -51,7 +51,7 @@ func (l *LoginSrvS) LoginSrv(c context.Context, logind *dto.Account) (string, er
 	// plan handler role for admin, organizer and user
 
 	// make token
-	claims := jwt.NewJWTclem(data.ID, "")
+	claims := jwtpkg.NewJWTclem(data.ID, "")
 
 	token, err := claims.GenToken()
 
