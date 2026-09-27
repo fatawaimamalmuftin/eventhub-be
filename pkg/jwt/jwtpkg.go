@@ -1,4 +1,4 @@
-package jwt
+package jwtpkg
 
 import (
 	"os"
@@ -33,4 +33,26 @@ func (j *JWTclem) GenToken() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, j)
 
 	return token.SignedString([]byte(os.Getenv("JWT_KEY")))
+}
+
+func (j *JWTclem) DecodeToken(token string) error {
+	jwtToken, err := jwt.ParseWithClaims(token, j, func(t *jwt.Token) (any, error) {
+		return []byte(os.Getenv("JWT_KEY")), nil
+	})
+
+	if err != nil {
+		return jwt.ErrTokenExpired
+	}
+
+	iss, err := jwtToken.Claims.GetIssuer()
+
+	if err != nil {
+		return err
+	}
+
+	if iss != os.Getenv("JWT_ISSUER") {
+		return jwt.ErrTokenInvalidIssuer
+	}
+
+	return nil
 }
