@@ -2,9 +2,12 @@ package hasing
 
 import (
 	"crypto/rand"
+	"crypto/subtle"
 	"encoding/base64"
 	"fmt"
+	"strings"
 
+	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
 	"golang.org/x/crypto/argon2"
 )
 
@@ -69,9 +72,58 @@ func (h *HashConfig) GenPasHash(pass string) (string, error) {
 	base64salt := base64.RawStdEncoding.EncodeToString(salt)
 
 	completeHash := fmt.Sprintf(
-		"$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
+		"$argon2id$v=%d$m=%d, t=%d, p=%d$%s$%s",
 		argon2.Version, h.Memory, h.Time, h.Thread, base64salt, base64hash,
 	)
 
 	return completeHash, nil
+}
+
+func ComparePassHash(pass, passFromdb string) error {
+	result := strings.Split(passFromdb, "$")
+
+	if len(result) < 6 {
+		return cuserror.InvalidHash
+	}
+
+	if result[1] != "argon2id" {
+		return cuserror.InternalError
+	}
+
+	var version int
+
+	if _, e := fmt.Sscanf(result[2], "v=%d", &version); e != nil {
+		return cuserror.InternalError
+	}
+
+	if version != argon2.Version {
+		return cuserror.InternalError
+	}
+
+	var memory, time uint32
+	var thread uint8
+
+	if _, e := fmt.Sscanf(result[3], "m=%d, t=%d, p=%d", &memory, &time, &thread); e != nil {
+		return cuserror.InternalError
+	}
+
+	salt, e := base64.RawStdEncoding.DecodeString(result[4])
+
+	if e != nil {
+		return cuserror.InternalError
+	}
+
+	hash, e := base64.RawStdEncoding.DecodeString(result[5])
+
+	if e != nil {
+		return cuserror.InternalError
+	}
+
+	newHash := argon2.IDKey([]byte(pass), salt, time, memory, thread, uint32(len(hash)))
+
+	if subtle.ConstantTimeCompare(hash, newHash) == 0 {
+		return cuserror.PasMissMach
+	}
+
+	return nil
 }
