@@ -6,8 +6,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func MainRouter(r *gin.Engine, pool *pgxpool.Pool) {
+func MainRouter(r *gin.Engine, db *pgxpool.Pool) {
 	r.Use(middleware.Cors)
 
-	authRouter(r, pool)
+	authRouter(r, db)
+	eventRouter(r, db)
 }
