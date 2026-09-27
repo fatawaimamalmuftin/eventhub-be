@@ -31,7 +31,7 @@ func (r *RegisHdr) Regis(c *gin.Context) {
 	if e := c.ShouldBindBodyWithJSON(&newUser); e != nil {
 		c.JSON(http.StatusInternalServerError, dto.Res{
 			Status:  false,
-			Message: "failed to bind",
+			Message: cuserror.ErrBinding,
 		})
 		return
 	}
