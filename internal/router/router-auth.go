@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/handler"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/middleware"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/service"
 	"github.com/gin-gonic/gin"
@@ -21,4 +22,8 @@ func authRouter(r *gin.Engine, db *pgxpool.Pool) {
 	ls := service.LoginService(lr)
 	lh := handler.LoginHandler(ls)
 	Auth.POST("login", lh.Login)
+
+	los := service.LogoutService()
+	loh := handler.LogoutHandler(los)
+	Auth.POST("logout", middleware.CheckJWTtoken, loh.Logout)
 }

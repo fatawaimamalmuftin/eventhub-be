@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
+	"github.com/fatawaimamalmuftin/eventhub-be/pkg/blacklist"
 	jwtpkg "github.com/fatawaimamalmuftin/eventhub-be/pkg/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -56,6 +57,14 @@ func CheckJWTtoken(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, dto.Res{
 			Status:  false,
 			Message: "internal server error",
+		})
+		return
+	}
+
+	if blacklist.IsTokenBlackList(bearer[1]) {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, dto.Res{
+			Status:  false,
+			Message: "invalid token",
 		})
 		return
 	}
