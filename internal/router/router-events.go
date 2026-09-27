@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/handler"
+	"github.com/fatawaimamalmuftin/eventhub-be/internal/middleware"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/service"
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,7 @@ import (
 )
 
 func eventRouter(r *gin.Engine, db *pgxpool.Pool) {
-	event := r.Group("/event")
+	event := r.Group("/events")
 
 	efr := repo.EventsFilterRepo(db)
 	efs := service.EventsFilterService(efr)
@@ -22,4 +23,10 @@ func eventRouter(r *gin.Engine, db *pgxpool.Pool) {
 	edh := handler.EventDetailHandler(eds)
 
 	event.GET(":id", edh.GetEventDetail)
+
+	mer := repo.MyEventRepo(db)
+	mes := service.MyEventService(mer)
+	meh := handler.MyEventHandler(mes)
+
+	event.GET("my", middleware.CheckJWTtoken, meh.GetMyEventsHandler)
 }
