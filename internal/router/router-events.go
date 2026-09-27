@@ -9,10 +9,17 @@ import (
 )
 
 func eventRouter(r *gin.Engine, db *pgxpool.Pool) {
+	event := r.Group("/event")
 
 	efr := repo.EventsFilterRepo(db)
 	efs := service.EventsFilterService(efr)
 	efh := handler.EventsFilterHandler(efs)
 
-	r.GET("/events", efh.GetEvents)
+	event.GET("", efh.GetEvents)
+
+	edr := repo.EventDetailRepo(db)
+	eds := service.EventDetailService(edr)
+	edh := handler.EventDetailHandler(eds)
+
+	event.GET(":id", edh.GetEventDetail)
 }
