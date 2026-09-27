@@ -20,5 +20,5 @@ func authRouter(r *gin.Engine, db *pgxpool.Pool) {
 	lr := repo.LoginRepo(db)
 	ls := service.LoginService(lr)
 	lh := handler.LoginHandler(ls)
-	// Auth.POST("login", lh.Login)
+	Auth.POST("login", lh.Login)
 }
