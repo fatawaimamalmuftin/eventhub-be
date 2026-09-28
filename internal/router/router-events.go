@@ -29,4 +29,10 @@ func eventRouter(r *gin.Engine, db *pgxpool.Pool) {
 	meh := handler.MyEventHandler(mes)
 
 	event.GET("my", middleware.CheckJWTtoken, meh.GetMyEventsHandler)
+
+	cupr := repo.ChangeUserProfileRepo(db)
+	cups := service.ChangeUserProfileService(cupr)
+	cuph := handler.ChangeUserProfileHandler(cups)
+
+	event.PATCH("changeuserprofile", middleware.CheckJWTtoken, cuph.ChangeUserProfileHdr)
 }
