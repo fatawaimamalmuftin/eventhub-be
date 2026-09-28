@@ -23,20 +23,8 @@ func (e *DbEventDetailRepo) GetEventDetail(
 ) (model.EventDetail, error) {
 
 	q := `
-		SELECT
-			e.id_event,
-			e.title,
-			e.images,
-			e.start_time,
-			e.end_time,
-			e.location,
-			e.attendees,
-			e.capacity,
-			e.description,
-			e.event_format,
-			e.community_id,
-			c.title AS community_title,
-			c.images AS community_images
+		SELECT 
+		e.id_event, e.title, e.images, e.start_time, e.end_time, e.location, e.attendees, e.capacity, e.description, e.event_format, e.community_id, c.title AS community_title, c.images AS community_images
 		FROM events e
 		JOIN community c
 			ON c.id_community = e.community_id
@@ -45,20 +33,7 @@ func (e *DbEventDetailRepo) GetEventDetail(
 
 	var event model.EventDetail
 
-	err := e.Db.QueryRow(c, q, id).Scan(
-		&event.ID,
-		&event.Title,
-		&event.Images,
-		&event.StartTime,
-		&event.EndTime,
-		&event.Location,
-		&event.Attendees,
-		&event.Capacity,
-		&event.Description,
-		&event.EventFormat,
-		&event.CommunityID,
-		&event.CommunityTitle,
-		&event.CommunityImages,
+	err := e.Db.QueryRow(c, q, id).Scan( &event.ID, &event.Title, &event.Images, &event.StartTime, &event.EndTime, &event.Location, &event.Attendees, &event.Capacity, &event.Description, &event.EventFormat, &event.CommunityID, &event.CommunityTitle, &event.CommunityImages,
 	)
 
 	if err != nil {
