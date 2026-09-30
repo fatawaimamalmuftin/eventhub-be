@@ -1,0 +1,14 @@
+basePath: /
+host: localhost:5678
+info:
+  contact: {}
+  description: This is a sample server celler server.
+  title: EventHub BE
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  BasicAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

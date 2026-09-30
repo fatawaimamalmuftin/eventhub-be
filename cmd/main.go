@@ -10,6 +10,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// @title						EventHub BE
+// @version						1.0
+// @description					This is a sample server celler server.
+
+// @host						localhost:5678
+// @BasePath					/
+
+// @securityDefinitions.apikey	BasicAuth
+// @in							header
+// @name						Authorization
+// @deskription					Bearer token identity
 func main() {
 	err := godotenv.Load()
 
