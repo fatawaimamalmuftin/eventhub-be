@@ -26,6 +26,13 @@ func EventsFilterHandler(efr IEventsFilterSrv) *EventsFilter {
 	}
 }
 
+// @Summary		Get all events
+// @Description	don`t need token
+// @Tags		Get all events
+// @Produce		json
+// @Success		200  {object}  dto.Res
+// @Failure		500  {object}  dto.Res
+// @Router		/events [get]
 func (e *EventsFilter) GetEvents(c *gin.Context) {
 
 	eventQuery := dto.EventQuery{

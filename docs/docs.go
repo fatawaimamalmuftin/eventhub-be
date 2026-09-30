@@ -66,6 +66,32 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/events": {
+            "get": {
+                "description": "don` + "`" + `t need token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Get all events"
+                ],
+                "summary": "Get all events",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
