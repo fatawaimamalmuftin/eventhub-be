@@ -24,6 +24,17 @@ func LoginHandler(ls ILoginSrv) *LoginHdr {
 	}
 }
 
+// @Summary		Login
+// @Description	login need token
+// @Tags		login
+// @Accept		json
+// @Produce		json
+// @Param		account	body	dto.Account	true	"Login credential"
+// @Success		200  {object}  dto.Res
+// @Failure		400  {object}  dto.Res
+// @Failure		401  {object}  dto.Res
+// @Failure		500  {object}  dto.Res
+// @Router		/auth/login [post]
 func (l *LoginHdr) Login(c *gin.Context) {
 	logind := dto.Account{}
 
