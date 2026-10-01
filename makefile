@@ -10,11 +10,14 @@ migrate-up:
 migrate-down:
 	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) down 1
 
-migrate-version:
-	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) version
+migrate-down-all:
+	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) down
 
 migrate-force:
-	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) force
+	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) force $(v)
+
+migrate-version:
+	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) version
 
 migrate-create:
 	migrate create -ext sql -dir $(MIGRATION_PATH) -seq create_$(nt)_table

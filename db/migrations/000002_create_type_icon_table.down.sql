@@ -1,1 +1,1 @@
-DROP TYPE type_icon;
+DROP TYPE IF EXISTS type_icon;

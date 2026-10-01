@@ -1,1 +1,1 @@
-DROP TABLE event_categories;
+DROP TABLE IF EXISTS event_categories;

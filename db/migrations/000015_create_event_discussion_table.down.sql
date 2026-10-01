@@ -1,1 +1,1 @@
-DROP TABLE event_discussion;
+DROP TABLE IF EXISTS event_discussion;

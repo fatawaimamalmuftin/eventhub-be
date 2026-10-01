@@ -1,1 +1,1 @@
-DROP TABLE speaker;
+DROP TABLE IF EXISTS speaker;

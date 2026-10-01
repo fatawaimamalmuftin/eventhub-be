@@ -1,1 +1,1 @@
-DROP TABLE community;
+DROP TABLE IF EXISTS community;

@@ -1,1 +1,1 @@
-DROP TABLE event_speakers;
+DROP TABLE IF EXISTS event_speakers;

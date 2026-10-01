@@ -1,1 +1,1 @@
-DROP TABLE testimonials;
+DROP TABLE IF EXISTS testimonials;

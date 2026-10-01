@@ -1,1 +1,1 @@
-TYPE event_format;
+DROP TYPE IF EXISTS event_format;
