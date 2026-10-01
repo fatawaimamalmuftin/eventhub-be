@@ -15,9 +15,6 @@ migrate-version:
 migrate-force:
 	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) force
 
-migrate-force:
-    migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) force
-
 migrate-create:
 	migrate create -ext sql -dir $(MIGRATION_PATH) -seq create_$(nt)_table
 
