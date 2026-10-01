@@ -22,12 +22,14 @@ migrate-version:
 migrate-create:
 	migrate create -ext sql -dir $(MIGRATION_PATH) -seq create_$(nt)_table
 
-seed:
+seed-file:
+	psql "$(DB_URL)" < "$(SEEDER_PATH)/$(n).sql"
+
+seed-all:
 	@for file in $(SEEDER_PATH)/*.sql; do \
 		echo "Seeding $$file..."; \
 		psql "$(DB_URL)" < "$$file" || exit 1; \
 	done
-
 
 seed-create:
 	mkdir -p $(SEEDER_PATH)
