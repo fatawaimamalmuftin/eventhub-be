@@ -36,6 +36,10 @@ func main() {
 		fmt.Println(err)
 	}
 
+	rdb := config.RedisConfig()
+	log.Println("Redis connected successfully",rdb)
+	defer rdb.Close()
+
 	router.MainRouter(r, db)
 
 	r.Run(":5678")
