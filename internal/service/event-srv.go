@@ -28,19 +28,17 @@ func EventsFilterService(efr *repo.DbEventFilterRepo, rdb *redis.Client) *Events
 func (e *EventsFilterSrvS) GetEvents(c context.Context, eventQuery dto.EventQuery) ([]model.Event, error) {
 	eventRedis, err := e.RDB.Get(c, "eventhub:eventfilter").Result()
 	if err != nil {
-		event, err := e.EFr.GetEvents(c, eventQuery)
-		if err != nil {
-			return []model.Event{}, cuserror.InternalError
-		}
+		log.Println("get from db")
+	}
 
-		eventFromDb, err := json.Marshal(event)
-		if err != nil {
-			return []model.Event{}, err
-		}
-		er := e.RDB.Set(c, "eventhub:eventfilter", eventFromDb, 5*time.Minute)
-		if er != nil {
-			return []model.Event{}, cuserror.InternalError
-		}
+	eventsFromDB, err := e.EFr.GetEvents(c, eventQuery)
+	if err != nil {
+		return []model.Event{}, err
+	}
+
+	eventFromDb, err := json.Marshal(eventsFromDB)
+	if err != nil {
+		log.Println("error marshal")
 	}
 
 	var event []model.Event
@@ -49,6 +47,10 @@ func (e *EventsFilterSrvS) GetEvents(c context.Context, eventQuery dto.EventQuer
 	er := json.Unmarshal([]byte(eventRedis), &event)
 	if er != nil {
 		log.Println(er)
+	}
+	er = e.RDB.Set(c, "eventhub:eventfilter", eventFromDb, 5*time.Minute).Err()
+	if er != nil {
+		return []model.Event{}, cuserror.InternalError
 	}
 
 	return event, nil
