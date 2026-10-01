@@ -7,13 +7,14 @@ import (
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 )
 
-func eventRouter(r *gin.Engine, db *pgxpool.Pool) {
+func eventRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client) {
 	event := r.Group("/events")
 
 	efr := repo.EventsFilterRepo(db)
-	efs := service.EventsFilterService(efr)
+	efs := service.EventsFilterService(efr, rdb)
 	efh := handler.EventsFilterHandler(efs)
 
 	event.GET("", efh.GetEvents)

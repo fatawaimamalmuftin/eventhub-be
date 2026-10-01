@@ -40,7 +40,7 @@ func main() {
 	log.Println("Redis connected successfully",rdb)
 	defer rdb.Close()
 
-	router.MainRouter(r, db)
+	router.MainRouter(r, db, rdb)
 
 	r.Run(":5678")
 }
