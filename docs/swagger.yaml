@@ -73,6 +73,29 @@ paths:
       summary: Get all events
       tags:
       - Get all events
+  /events/my:
+    get:
+      description: Get events created by the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Get my events
+      tags:
+      - Events
 securityDefinitions:
   BasicAuth:
     in: header

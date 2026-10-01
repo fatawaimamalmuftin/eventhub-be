@@ -27,6 +27,15 @@ func MyEventHandler(mes IMyEvent) *MyEventHdr {
 	}
 }
 
+// @Summary		Get my events
+// @Description	Get events created by the authenticated user
+// @Tags		Events
+// @Produce		json
+// @Security	BasicAuth
+// @Success		200	{object}	dto.Res
+// @Failure		401	{object}	dto.Res
+// @Failure		500	{object}	dto.Res
+// @Router		/events/my [get]
 func (m *MyEventHdr) GetMyEventsHandler(c *gin.Context) {
 
 	tokenClaims, exists := c.Get("tokenCleims")
