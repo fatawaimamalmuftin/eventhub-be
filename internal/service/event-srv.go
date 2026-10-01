@@ -33,7 +33,7 @@ func (e *EventsFilterSrvS) GetEvents(c context.Context, eventQuery dto.EventQuer
 		if err := json.Unmarshal([]byte(eventRedis), &events); err != nil {
 			log.Println("error unmarshal redis:", err)
 		}
-		
+
 		log.Println("get from redis")
 		return events, nil
 	}

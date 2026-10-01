@@ -26,7 +26,7 @@ func eventRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client) {
 	event.GET(":id", edh.GetEventDetail)
 
 	mer := repo.MyEventRepo(db)
-	mes := service.MyEventService(mer)
+	mes := service.MyEventService(mer, rdb)
 	meh := handler.MyEventHandler(mes)
 
 	event.GET("my", middleware.CheckJWTtoken, meh.GetMyEventsHandler)
