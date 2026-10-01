@@ -72,6 +72,5 @@ func (r *RegisHdr) Regis(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.Res{
 		Status:  true,
 		Message: "registration successful",
-		Data:    newUser.FullName,
 	})
 }
