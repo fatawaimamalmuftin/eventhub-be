@@ -3,7 +3,6 @@ include ./.env
 DB_URL=postgres://$(DB_USER):$(DB_PASSWORD)@localhost:$(DB_PORT)/$(DB_DATA)?sslmode=disable
 MIGRATION_PATH=db/migrations
 SEEDER_PATH=db/seeding
-SEEDER_PATH=db/seeding
 
 migrate-up:
 	migrate -database "$(DB_URL)" -path $(MIGRATION_PATH) up
