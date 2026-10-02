@@ -2,14 +2,13 @@ package blacklist
 
 import (
 	"context"
-	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
 func AddToken(token string, rdb *redis.Client, c context.Context) error {
 	quewe := "eventhub:token" + token
-	err := rdb.Set(c, quewe, "blacklisted", 25*time.Hour).Err()
+	err := rdb.Set(c, quewe, "blacklisted", 0).Err()
 	return err
 }
 
