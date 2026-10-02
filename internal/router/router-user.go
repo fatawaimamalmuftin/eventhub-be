@@ -23,4 +23,10 @@ func userRouter(r *gin.Engine, db *pgxpool.Pool) {
 	leh := handler.LeaveEventHandler(les)
 
 	user.GET(":eventId/leave", middleware.CheckJWTtoken, leh.CreateLeaveEventHandler)
+
+	upr := repo.UserProfileRepo(db)
+	ups := service.UserProfileService(upr)
+	uph := handler.UserProfileHandler(ups)
+
+	user.GET("profile", middleware.CheckJWTtoken, uph.GetUserProfileHandler)
 }

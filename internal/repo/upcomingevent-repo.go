@@ -17,21 +17,10 @@ func UpcomingEventRepo(db *pgxpool.Pool) *DbUpcomingRepo {
 	}
 }
 
-func (u *DbUpcomingRepo) GetUpcomingEventRepo(
-	c context.Context,
-) ([]model.UpcomingEvent, error) {
-
+func (u *DbUpcomingRepo) GetUpcomingEventRepo(c context.Context) ([]model.UpcomingEvent, error) {
 	q := `
 		SELECT
-			id_event,
-			title,
-			images,
-			start_time,
-			end_time,
-			location,
-			attendees,
-			capacity,
-			event_format
+			id_event,title,images,start_time,end_time,location,attendees,capacity,event_format
 		FROM events
 		WHERE start_time > NOW()
 		ORDER BY start_time ASC;
@@ -52,15 +41,7 @@ func (u *DbUpcomingRepo) GetUpcomingEventRepo(
 		var event model.UpcomingEvent
 
 		err := rows.Scan(
-			&event.ID,
-			&event.Title,
-			&event.Images,
-			&event.StartTime,
-			&event.EndTime,
-			&event.Location,
-			&event.Attendees,
-			&event.Capacity,
-			&event.EventFormat,
+			&event.ID, &event.Title, &event.Images, &event.StartTime, &event.EndTime, &event.Location, &event.Attendees, &event.Capacity, &event.EventFormat,
 		)
 
 		if err != nil {
