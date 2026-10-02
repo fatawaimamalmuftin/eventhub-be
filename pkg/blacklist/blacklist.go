@@ -1,24 +1,30 @@
 package blacklist
 
-import "sync"
+import (
+	"context"
+	"time"
 
-var (
-	blacklistToken = make(map[string]struct{})
-	mutex          sync.RWMutex
+	"github.com/redis/go-redis/v9"
 )
 
-func AddToken(token string) {
-	mutex.Lock()
-	defer mutex.Unlock()
-
-	blacklistToken[token] = struct{}{}
+func AddToken(token string, rdb *redis.Client, c context.Context) error {
+	quewe := "eventhub:token" + token
+	err := rdb.Set(c, quewe, "blacklisted", 25*time.Hour).Err()
+	return err
 }
 
-func IsTokenBlackList(token string) bool {
-	mutex.RLock()
-	defer mutex.RUnlock()
+func IsTokenBlackList(token string, rdb *redis.Client, c context.Context) (bool, error) {
+	quewe := "eventhub:token" + token
 
-	_, exist := blacklistToken[token]
+	err := rdb.Get(c, quewe).Err()
 
-	return exist
+	if err == redis.Nil {
+		return false, nil
+	}
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

@@ -29,13 +29,13 @@ func eventRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client) {
 	mes := service.MyEventService(mer, rdb)
 	meh := handler.MyEventHandler(mes)
 
-	event.GET("my", middleware.CheckJWTtoken, meh.GetMyEventsHandler)
+	event.GET("my", func(c *gin.Context) { middleware.CheckJWTtoken(c, rdb) }, meh.GetMyEventsHandler)
 
 	cupr := repo.ChangeUserProfileRepo(db)
 	cups := service.ChangeUserProfileService(cupr)
 	cuph := handler.ChangeUserProfileHandler(cups)
 
-	event.PATCH("changeuserprofile", middleware.CheckJWTtoken, cuph.ChangeUserProfileHdr)
+	event.PATCH("changeuserprofile", func(c *gin.Context) { middleware.CheckJWTtoken(c, rdb) }, cuph.ChangeUserProfileHdr)
 
 	ucr := repo.UpcomingEventRepo(db)
 	ucs := service.UpcomingEventSevice(ucr)

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
@@ -9,20 +10,20 @@ import (
 )
 
 type ILogoutSrv interface {
-	Logout(token string) error
+	Logout(token string, c context.Context) error
 }
 
 type LogoutHdr struct {
 	Ls ILogoutSrv
 }
 
-func LogoutHandler(logoutService ILogoutSrv) *LogoutHdr {
+func LogoutHandler(logoutService ILogoutSrv, c *gin.Engine) *LogoutHdr {
 	return &LogoutHdr{
 		Ls: logoutService,
 	}
 }
 
-func (l *LogoutHdr) Logout(c *gin.Context) {
+func (l *LogoutHdr) LogoutHdr(c *gin.Context) {
 	authorization := c.GetHeader("Authorization")
 
 	bearerPath := strings.Split(authorization, " ")
@@ -35,7 +36,7 @@ func (l *LogoutHdr) Logout(c *gin.Context) {
 		return
 	}
 
-	if err := l.Ls.Logout(bearerPath[1]); err != nil {
+	if err := l.Ls.Logout(bearerPath[1], c.Request.Context()); err != nil {
 		c.JSON(http.StatusInternalServerError, dto.Res{
 			Status:  false,
 			Message: "internal server error",

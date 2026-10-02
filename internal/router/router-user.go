@@ -11,22 +11,26 @@ import (
 
 func userRouter(r *gin.Engine, db *pgxpool.Pool) {
 	user := r.Group("/user")
+	
+	jwtMiddleware := func(c *gin.Context) {
+		middleware.CheckJWTtoken(c, nil)
+	}
 
 	jer := repo.JoinEventRepo(db)
 	jes := service.JoinEventService(jer)
 	jeh := handler.JoinEventHandler(jes)
 
-	user.GET(":eventId/join", middleware.CheckJWTtoken, jeh.CreateJoinEventHandler)
+	user.GET(":eventId/join", jwtMiddleware, jeh.CreateJoinEventHandler)
 
 	ler := repo.LeaveEventRepo(db)
 	les := service.LeaveEventService(ler)
 	leh := handler.LeaveEventHandler(les)
 
-	user.GET(":eventId/leave", middleware.CheckJWTtoken, leh.CreateLeaveEventHandler)
+	user.GET(":eventId/leave", jwtMiddleware, leh.CreateLeaveEventHandler)
 
 	upr := repo.UserProfileRepo(db)
 	ups := service.UserProfileService(upr)
 	uph := handler.UserProfileHandler(ups)
 
-	user.GET("profile", middleware.CheckJWTtoken, uph.GetUserProfileHandler)
+	user.GET("profile", jwtMiddleware, uph.GetUserProfileHandler)
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -37,10 +38,11 @@ func main() {
 	}
 
 	rdb := config.RedisConfig()
-	log.Println("Redis connected successfully",rdb)
+	log.Println("Redis connected successfully", rdb)
 	defer rdb.Close()
 
-	router.MainRouter(r, db, rdb)
+	ctx := context.Background()
+	router.MainRouter(r, db, rdb, &ctx)
 
 	r.Run(":5678")
 }

@@ -10,9 +10,10 @@ import (
 	jwtpkg "github.com/fatawaimamalmuftin/eventhub-be/pkg/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/redis/go-redis/v9"
 )
 
-func CheckJWTtoken(c *gin.Context) {
+func CheckJWTtoken(c *gin.Context, rdb *redis.Client) {
 	autorizationhHeader := c.GetHeader("Authorization")
 
 	if autorizationhHeader == "" {
@@ -61,7 +62,17 @@ func CheckJWTtoken(c *gin.Context) {
 		return
 	}
 
-	if blacklist.IsTokenBlackList(bearer[1]) {
+	isBlacklisted, err := blacklist.IsTokenBlackList(bearer[1], rdb, c.Request.Context())
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, dto.Res{
+			Status:  false,
+			Message: "internal server error",
+		})
+		return
+	}
+
+	if isBlacklisted {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, dto.Res{
 			Status:  false,
 			Message: "invalid token",
