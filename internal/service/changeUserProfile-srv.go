@@ -42,7 +42,7 @@ func (s *ChangeUserProfileSrvS) ChangeUserProfileSrv(userID int, data dto.Change
 		uploadPath := "public/uploads/profile"
 
 		fileName := fmt.Sprintf(
-			"user-%d-%s.jpg", userID, time.Now().Unix(),
+			"user-%d-%d.jpg", userID, time.Now().Unix(),
 		)
 
 		filePath := filepath.Join(uploadPath, fileName)
