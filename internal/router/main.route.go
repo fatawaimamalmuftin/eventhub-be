@@ -20,6 +20,6 @@ func MainRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client, c *context.C
 
 	authRouter(r, db, rdb, c)
 	eventRouter(r, db, rdb)
-	userRouter(r, db)
-	adminRouter(r,db)
+	userRouter(r, db, rdb)
+	adminRouter(r, db)
 }

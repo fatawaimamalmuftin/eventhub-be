@@ -7,13 +7,14 @@ import (
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 )
 
-func userRouter(r *gin.Engine, db *pgxpool.Pool) {
+func userRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client) {
 	user := r.Group("/user")
-	
+
 	jwtMiddleware := func(c *gin.Context) {
-		middleware.CheckJWTtoken(c, nil)
+		middleware.CheckJWTtoken(c, rdb)
 	}
 
 	jer := repo.JoinEventRepo(db)
