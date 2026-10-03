@@ -9,7 +9,6 @@ import (
 )
 
 func DBconfig() (*pgxpool.Pool, error) {
-	
 
 	user := os.Getenv("DB_USER")
 	pass := os.Getenv("DB_PASSWORD")
@@ -25,7 +24,13 @@ func DBconfig() (*pgxpool.Pool, error) {
 		return nil, err
 	}
 
-	log.Println("connected database")
+	if db != nil {
+		if err := db.Ping(context.Background()); err != nil {
+			log.Println("gagal ping database:", err)
+			return nil, err
+		}
+		log.Println("connected database")
+	}
 
 	return db, nil
 }
