@@ -42,4 +42,10 @@ func eventRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client) {
 	uch := handler.UpcomingEventHandler(ucs)
 
 	event.GET("upcoming", uch.GetUpcomingEventHandler)
+
+	cer := repo.ProviderCreateEventRepo(db)
+	ces := service.ProviderCreateEventService(cer)
+	ceh := handler.ProviderCreateEventHandler(ces)
+
+	event.POST("createEvent", ceh.CreateEventHdr)
 }
