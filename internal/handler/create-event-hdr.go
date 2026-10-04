@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
 	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
@@ -9,7 +10,7 @@ import (
 )
 
 type ICreateEvent interface {
-	CreateEventService(data dto.CreateEvent) (string, error)
+	CreateEventService(c context.Context, data dto.CreateEvent) (string, error)
 }
 
 type CreateEventHandler struct {
@@ -33,7 +34,7 @@ func (pr *CreateEventHandler) CreateEventHdr(c *gin.Context) {
 		return
 	}
 
-	eventPath, err := pr.CEs.CreateEventService(event)
+	eventPath, err := pr.CEs.CreateEventService(c.Request.Context(), event)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, dto.Res{
 			Status:  false,

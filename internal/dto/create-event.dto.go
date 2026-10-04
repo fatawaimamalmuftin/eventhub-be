@@ -12,4 +12,9 @@ type CreateEvent struct {
 	Description string    `json:"description" binding:"required"`
 	EventFormat string    `json:"event_format" binding:"required"`
 	CommunityID *int      `json:"community_id"`
+	CategoryID  int       `json:"category_id"`
+
+	SpeakerID   *int    `json:"speaker_id"`
+	SpeakerName *string `json:"speaker_name"`
+	PositionJob *string `json:"position_job"`
 }

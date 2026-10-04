@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"os"
@@ -10,19 +11,22 @@ import (
 
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type CreateEventSrv struct {
 	CEr *repo.DbCreateEventRepo
+	Db  *pgxpool.Pool
 }
 
-func ProviderCreateEventService(cer *repo.DbCreateEventRepo) *CreateEventSrv {
+func ProviderCreateEventService(cer *repo.DbCreateEventRepo, db *pgxpool.Pool) *CreateEventSrv {
 	return &CreateEventSrv{
 		CEr: cer,
+		Db:  db,
 	}
 }
 
-func (pr *CreateEventSrv) CreateEventService(data dto.CreateEvent) (string, error) {
+func (pr *CreateEventSrv) CreateEventService(c context.Context, data dto.CreateEvent) (string, error) {
 	splitData := strings.Split(data.Images, ",")
 	if len(splitData) != 2 {
 		return "", fmt.Errorf("invalid base64 image")
@@ -45,8 +49,40 @@ func (pr *CreateEventSrv) CreateEventService(data dto.CreateEvent) (string, erro
 
 	data.Images = fileName
 
-	if e := pr.CEr.CreateEventRepo(data); e != nil {
-		return "", e
+	tx, err := pr.Db.Begin(c)
+	if err != nil {
+		os.Remove(filePath)
+		return "", err
+	}
+	defer tx.Rollback(c)
+
+	eventID, err := pr.CEr.CreateEventRepo(c, tx, data)
+	if err != nil {
+		os.Remove(filePath)
+		return "", err
+	}
+
+	var speakerID int
+
+	if data.SpeakerID != nil {
+		speakerID = *data.SpeakerID
+	} else {
+		speakerID, err = pr.CEr.CreateSpeakerRepo(c, tx, *data.SpeakerName, *data.PositionJob)
+		if err != nil {
+			os.Remove(filePath)
+			return "", err
+		}
+	}
+
+	err = pr.CEr.CreateEventRelationRepo(c, tx, eventID, data.CategoryID, speakerID)
+	if err != nil {
+		os.Remove(filePath)
+		return "", err
+	}
+
+	if err := tx.Commit(c); err != nil {
+		os.Remove(filePath)
+		return "", err
 	}
 
 	return eventPath, nil
