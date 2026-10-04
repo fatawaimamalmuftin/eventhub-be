@@ -1,7 +1,7 @@
 package model
 
 type CommunityDetail struct {
-	ID          int     `json:"id"`
+	ID          int     `json:"id" binding:"required,min=1"`
 	Title       string  `json:"title"`
 	Images      *string `json:"images"`
 	Description *string `json:"description"`
