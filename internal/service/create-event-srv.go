@@ -12,17 +12,20 @@ import (
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/repo"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 )
 
 type CreateEventSrv struct {
 	CEr *repo.DbCreateEventRepo
 	Db  *pgxpool.Pool
+	RDB *redis.Client
 }
 
-func ProviderCreateEventService(cer *repo.DbCreateEventRepo, db *pgxpool.Pool) *CreateEventSrv {
+func ProviderCreateEventService(cer *repo.DbCreateEventRepo, db *pgxpool.Pool, rdb *redis.Client) *CreateEventSrv {
 	return &CreateEventSrv{
 		CEr: cer,
 		Db:  db,
+		RDB: rdb,
 	}
 }
 
@@ -82,6 +85,10 @@ func (pr *CreateEventSrv) CreateEventService(c context.Context, data dto.CreateE
 
 	if err := tx.Commit(c); err != nil {
 		os.Remove(filePath)
+		return "", err
+	}
+
+	if err := pr.RDB.Del(c, "eventhub:eventfilter").Err(); err == nil {
 		return "", err
 	}
 
