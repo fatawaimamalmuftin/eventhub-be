@@ -24,4 +24,5 @@ func MainRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client, c *context.C
 	adminRouter(r, db)
 	notifRouter(r, db, rdb)
 	communityRouter(r, db)
+	testimonialRouter(r, db, rdb)
 }
