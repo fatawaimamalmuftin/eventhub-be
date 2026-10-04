@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func communityRouter(r *gin.Engine,db *pgxpool.Pool,) {
+func communityRouter(r *gin.Engine, db *pgxpool.Pool) {
 	community := r.Group("/communities")
 
 	cdr := repo.ProviderCommunityDetailRepo(db)
@@ -16,4 +16,10 @@ func communityRouter(r *gin.Engine,db *pgxpool.Pool,) {
 	cdh := handler.ProviderCommunityDetailHandler(cds)
 
 	community.GET(":id", cdh.GetCommunityDetail)
+
+	cr := repo.ProviderCommunityRepo(db)
+	cs := service.ProviderCommunityService(cr)
+	ch := handler.ProviderCommunityHandler(cs)
+
+	community.GET("popular", ch.GetPopularCommunities)
 }
