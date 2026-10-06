@@ -17,19 +17,14 @@ func ChangeUserProfileRepo(db *pgxpool.Pool) *DbChangeUserProfileRepoS {
 	}
 }
 
-func (d *DbChangeUserProfileRepoS) ChangeUserProfileRpo(
-	userID int,
-	data dto.ChangeUserProfile,
-	profilePath string,
-) error {
-
+func (d *DbChangeUserProfileRepoS) ChangeUserProfileRpo(userID int, data dto.ChangeUserProfile, profilePath *string) error {
 	q := `
 		UPDATE users
 		SET
-			bio = $1,
-			location = $2,
-			job = $3,
-			profile = $4,
+			bio = COALESCE($1, bio),
+			location = COALESCE($2, location),
+			job = COALESCE($3, job),
+			profile = COALESCE($4, profile),
 			update_at = CURRENT_TIMESTAMP
 		WHERE id_users = $5;
 	`

@@ -6,8 +6,8 @@ type Account struct {
 }
 
 type ChangeUserProfile struct {
-	Bio      string `json:"bio"`
-	Location string `json:"location"`
-	Job      string `json:"job"`
-	Profile  string `json:"profile"`
+	Bio      *string `json:"bio"`
+	Location *string `json:"location"`
+	Job      *string `json:"job"`
+	Profile  *string `json:"profile"`
 }

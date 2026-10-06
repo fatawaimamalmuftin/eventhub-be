@@ -19,7 +19,7 @@ func NewJWTclem(id int, role string) *JWTclem {
 		Id:        id,
 		Role:      role,
 		Issuer:    os.Getenv("JWT_ISSUER"),
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 10)),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 15)),
 	}
 }
 

@@ -24,10 +24,10 @@ func ChangeUserProfileService(cupr *repo.DbChangeUserProfileRepoS) *ChangeUserPr
 
 func (s *ChangeUserProfileSrvS) ChangeUserProfileSrv(userID int, data dto.ChangeUserProfile) (string, error) {
 
-	profilePath := ""
+	var profilePath *string
 
-	if data.Profile != "" {
-		parts := strings.Split(data.Profile, ",")
+	if data.Profile != nil {
+		parts := strings.Split(*data.Profile, ",")
 
 		if len(parts) != 2 {
 			return "", fmt.Errorf("invalid base64 image")
@@ -51,7 +51,8 @@ func (s *ChangeUserProfileSrvS) ChangeUserProfileSrv(userID int, data dto.Change
 			return "", err
 		}
 
-		profilePath = "/uploads/profile/" + fileName
+		path := "/uploads/profile/" + fileName
+		profilePath = &path
 	}
 
 	err := s.CUPr.ChangeUserProfileRpo(userID, data, profilePath)
@@ -60,5 +61,9 @@ func (s *ChangeUserProfileSrvS) ChangeUserProfileSrv(userID int, data dto.Change
 		return "", err
 	}
 
-	return profilePath, nil
+	if profilePath != nil {
+		return *profilePath, nil
+	}
+
+	return "", nil
 }
