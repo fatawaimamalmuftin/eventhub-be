@@ -35,12 +35,13 @@ func (l *LoginSrvS) LoginSrv(c context.Context, logind *dto.Account) (string, dt
 	data, err := l.Lr.GetUserByEmail(logind.Email, c)
 
 	user := dto.UserLogind{
-		FullName: data.FullName,
-		Email:    data.Email,
-		Bio:      data.Bio,
-		Location: data.Location,
-		Profile:  data.Profile,
-		Job:      data.Job,
+		FullName:   data.FullName,
+		Email:      data.Email,
+		Bio:        data.Bio,
+		Location:   data.Location,
+		Profile:    data.Profile,
+		Job:        data.Job,
+		Created_at: &data.Created_at,
 	}
 
 	if err != nil {

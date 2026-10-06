@@ -32,6 +32,8 @@ func main() {
 
 	r := gin.Default()
 
+	r.Static("/uploads","./public/uploads")
+
 	db, err := config.DBconfig()
 	if err != nil {
 		fmt.Println(err)
