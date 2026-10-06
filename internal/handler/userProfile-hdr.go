@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	cuserror "github.com/fatawaimamalmuftin/eventhub-be/internal/CusError"
@@ -50,6 +51,7 @@ func (u *UserProfileHdr) GetUserProfileHandler(c *gin.Context) {
 	profile, err := u.UPs.GetUserProfileSrv(c.Request.Context(), userId.Id)
 
 	if err != nil {
+		log.Println(err.Error())
 
 		if err == cuserror.UserNotFound {
 			c.JSON(http.StatusNotFound, dto.Res{

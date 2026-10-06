@@ -7,15 +7,15 @@ import (
 )
 
 func AddToken(token string, rdb *redis.Client, c context.Context) error {
-	quewe := "eventhub:token" + token
-	err := rdb.Set(c, quewe, "blacklisted", 0).Err()
+	key := "eventhub:token:" + token
+	err := rdb.Set(c, key, "blacklisted", 1).Err()
 	return err
 }
 
 func IsTokenBlackList(token string, rdb *redis.Client, c context.Context) (bool, error) {
-	quewe := "eventhub:token" + token
+	key := "eventhub:token:" + token
 
-	err := rdb.Get(c, quewe).Err()
+	err := rdb.Get(c, key).Err()
 
 	if err == redis.Nil {
 		return false, nil

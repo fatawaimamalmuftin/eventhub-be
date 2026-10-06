@@ -14,7 +14,7 @@ func eventRouter(r *gin.Engine, db *pgxpool.Pool, rdb *redis.Client) {
 	event := r.Group("/events")
 
 	efr := repo.EventsFilterRepo(db)
-	efs := service.EventsFilterService(efr, rdb)
+	efs := service.EventsFilterService(efr)
 	efh := handler.EventsFilterHandler(efs)
 
 	event.GET("", efh.GetEvents)

@@ -30,7 +30,13 @@ func (u *DbUserProfileRepo) GetUserProfileRepo(c context.Context, userId int) (*
 	var user model.UserProfile
 
 	err := u.Db.QueryRow(c, q, userId).Scan(
-		&user.ID, &user.FullName, &user.Email, &user.Bio, &user.Location, &user.Profile, &user.Job,
+		&user.ID,
+		&user.FullName,
+		&user.Email,
+		&user.Bio,
+		&user.Location,
+		&user.Profile,
+		&user.Job,
 	)
 
 	if err != nil {
