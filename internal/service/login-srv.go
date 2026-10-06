@@ -23,29 +23,38 @@ func LoginService(lr *repo.DbLoginRepo) *LoginSrvS {
 	}
 }
 
-func (l *LoginSrvS) LoginSrv(c context.Context, logind *dto.Account) (string, error) {
+func (l *LoginSrvS) LoginSrv(c context.Context, logind *dto.Account) (string, dto.UserLogind, error) {
 	if len(logind.Password) < 6 {
-		return "", cuserror.LenPas
+		return "", dto.UserLogind{}, cuserror.LenPas
 	}
 
 	if !strings.Contains(logind.Email, "@") {
-		return "", cuserror.InvalidEmail
+		return "", dto.UserLogind{}, cuserror.InvalidEmail
 	}
 
 	data, err := l.Lr.GetUserByEmail(logind.Email, c)
 
+	user := dto.UserLogind{
+		FullName: data.FullName,
+		Email:    data.Email,
+		Bio:      data.Bio,
+		Location: data.Location,
+		Profile:  data.Profile,
+		Job:      data.Job,
+	}
+
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return "", cuserror.InvalidCredential
+			return "", dto.UserLogind{}, cuserror.InvalidCredential
 		}
-		return "", cuserror.InternalError
+		return "", dto.UserLogind{}, cuserror.InternalError
 	}
 
 	if e := hasing.ComparePassHash(logind.Password, data.Password); e != nil {
 		if errors.Is(e, cuserror.PasMissMach) {
-			return "", cuserror.InvalidCredential
+			return "", dto.UserLogind{}, cuserror.InvalidCredential
 		}
-		return "", e
+		return "", dto.UserLogind{}, e
 	}
 
 	// plan handler role for admin, organizer and user
@@ -56,8 +65,8 @@ func (l *LoginSrvS) LoginSrv(c context.Context, logind *dto.Account) (string, er
 	token, err := claims.GenToken()
 
 	if err != nil {
-		return "", cuserror.InternalError
+		return "", dto.UserLogind{}, cuserror.InternalError
 	}
 
-	return token, nil
+	return token, user, nil
 }

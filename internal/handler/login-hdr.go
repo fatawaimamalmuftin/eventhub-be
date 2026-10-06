@@ -11,7 +11,7 @@ import (
 )
 
 type ILoginSrv interface {
-	LoginSrv(c context.Context, user *dto.Account) (string, error)
+	LoginSrv(c context.Context, user *dto.Account) (string, dto.UserLogind, error)
 }
 
 type LoginHdr struct {
@@ -46,7 +46,7 @@ func (l *LoginHdr) Login(c *gin.Context) {
 		return
 	}
 
-	token, errService := l.Lh.LoginSrv(c.Request.Context(), &logind)
+	token, userLogind, errService := l.Lh.LoginSrv(c.Request.Context(), &logind)
 
 	if errService != nil {
 		if errService == cuserror.LenPas {
@@ -100,6 +100,7 @@ func (l *LoginHdr) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.Res{
 		Status:  true,
 		Message: "login success",
-		Data:    token,
+		Token:   token,
+		Data:    userLogind,
 	})
 }
