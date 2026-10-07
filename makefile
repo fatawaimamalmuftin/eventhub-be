@@ -1,6 +1,6 @@
 include ./.env
 
-DB_URL=postgres://$(DB_USER):$(DB_PASSWORD)@localhost:$(DB_PORT)/$(DB_DATA)?sslmode=disable
+DB_URL=postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_DATA)?sslmode=disable
 MIGRATION_PATH=db/migrations
 SEEDER_PATH=db/seeding
 
