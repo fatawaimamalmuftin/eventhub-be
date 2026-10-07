@@ -123,16 +123,131 @@
                     }
                 }
             }
+        },
+        "/testimonials": {
+            "get": {
+                "description": "Get list of all testimonials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "testimonials"
+                ],
+                "summary": "Get all testimonials",
+                "responses": {
+                    "200": {
+                        "description": "testimonials retrieved successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/model.Testimonial"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Create a new testimonial (requires authentication)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "testimonials"
+                ],
+                "summary": "Create a new testimonial",
+                "parameters": [
+                    {
+                        "description": "Create testimonial payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTestimonial"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "testimonial created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "failed to create testimonial",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "dto.Account": {
             "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "password": {
+                    "type": "string",
+                    "minLength": 6
+                }
+            }
+        },
+        "dto.CreateTestimonial": {
+            "type": "object",
+            "required": [
+                "text"
+            ],
+            "properties": {
+                "text": {
                     "type": "string"
                 }
             }
@@ -146,6 +261,30 @@
                 },
                 "status": {
                     "type": "boolean"
+                },
+                "token": {}
+            }
+        },
+        "model.Testimonial": {
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "job": {
+                    "type": "string"
+                },
+                "profile": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         }

@@ -5,7 +5,18 @@ definitions:
       email:
         type: string
       password:
+        minLength: 6
         type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.CreateTestimonial:
+    properties:
+      text:
+        type: string
+    required:
+    - text
     type: object
   dto.Res:
     properties:
@@ -14,6 +25,22 @@ definitions:
         type: string
       status:
         type: boolean
+      token: {}
+    type: object
+  model.Testimonial:
+    properties:
+      full_name:
+        type: string
+      id:
+        type: integer
+      job:
+        type: string
+      profile:
+        type: string
+      text:
+        type: string
+      user_id:
+        type: integer
     type: object
 host: localhost:5678
 info:
@@ -96,6 +123,67 @@ paths:
       summary: Get my events
       tags:
       - Events
+  /testimonials:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all testimonials
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: testimonials retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Testimonial'
+                  type: array
+              type: object
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Get all testimonials
+      tags:
+      - testimonials
+    post:
+      consumes:
+      - application/json
+      description: Create a new testimonial (requires authentication)
+      parameters:
+      - description: Create testimonial payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTestimonial'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: testimonial created successfully
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: unauthorized
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: failed to create testimonial
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Create a new testimonial
+      tags:
+      - testimonials
 securityDefinitions:
   BasicAuth:
     in: header
