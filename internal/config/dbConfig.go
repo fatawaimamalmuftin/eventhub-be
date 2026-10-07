@@ -14,8 +14,9 @@ func DBconfig() (*pgxpool.Pool, error) {
 	pass := os.Getenv("DB_PASSWORD")
 	source := os.Getenv("DB_DATA")
 	dbPort := os.Getenv("DB_PORT")
+	dbHost := os.Getenv("DB_HOST")
 
-	connect := "postgres://" + user + ":" + pass + "@localhost:" + dbPort + "/" + source
+	connect := "postgres://" + user + ":" + pass + "@" + dbHost + ":" + dbPort + "/" + source
 
 	db, err := pgxpool.New(context.Background(), connect)
 

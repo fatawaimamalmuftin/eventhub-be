@@ -39,7 +39,7 @@ func main() {
 	}
 
 	rdb := config.RedisConfig()
-	log.Println("Redis connected successfully", rdb)
+	log.Println("status Redis", rdb)
 	defer rdb.Close()
 
 	ctx := context.Background()
