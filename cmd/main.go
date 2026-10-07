@@ -27,12 +27,11 @@ func main() {
 
 	if err != nil {
 		log.Println("failed to load .env")
-		return
 	}
 
 	r := gin.Default()
 
-	r.Static("/uploads","./public/uploads")
+	r.Static("/uploads", "./public/uploads")
 
 	db, err := config.DBconfig()
 	if err != nil {
