@@ -28,7 +28,7 @@ func (c *ChangeUserProfileHdrS) ChangeUserProfileHdr(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&userProfile); err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.Res{
 			Status:  false,
-			Message: "failed to bind",
+			Message: err.Error(),
 		})
 		return
 	}
