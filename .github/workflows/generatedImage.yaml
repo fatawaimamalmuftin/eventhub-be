@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-24.04
         steps:
             - name: ambil repo yg paling baru di push
-              run: actions-checkout@v7
+              uses: actions/checkout@v7
             
             - name: ngejalanin docker buil dengan nama gontainer format ghcr
               run: docker build -t ghcr.io/${{github.repository}}:latest -f BE.Dockerfile .
