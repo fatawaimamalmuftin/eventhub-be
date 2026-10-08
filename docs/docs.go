@@ -312,7 +312,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Get all events"
+                    "Get all events with filter"
                 ],
                 "summary": "Get all events",
                 "responses": {

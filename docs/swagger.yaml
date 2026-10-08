@@ -442,7 +442,7 @@ paths:
             $ref: '#/definitions/dto.Res'
       summary: Get all events
       tags:
-      - Get all events
+      - Get all events with filter
   /events/{id}:
     get:
       consumes:
