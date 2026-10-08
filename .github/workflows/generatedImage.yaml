@@ -1,4 +1,4 @@
-name: "genereate image Be golang eventhub"
+name: "genereate image BE-Golang eventhub"
 on:
     push:
         branches: 
