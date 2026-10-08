@@ -1,11 +1,10 @@
 package service
 
 import (
-	"encoding/base64"
 	"fmt"
+	"mime/multipart"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
@@ -22,32 +21,41 @@ func ChangeUserProfileService(cupr *repo.DbChangeUserProfileRepoS) *ChangeUserPr
 	}
 }
 
-func (s *ChangeUserProfileSrvS) ChangeUserProfileSrv(userID int, data dto.ChangeUserProfile) (string, error) {
-
+func (s *ChangeUserProfileSrvS) ChangeUserProfileSrv(userID int, data dto.ChangeUserProfile, file *multipart.FileHeader) (string, error) {
 	var profilePath *string
 
-	if data.Profile != nil {
-		parts := strings.Split(*data.Profile, ",")
+	if file != nil {
 
-		if len(parts) != 2 {
-			return "", fmt.Errorf("invalid base64 image")
-		}
+		uploadPath := "public/uploads/profile"
 
-		imageData, err := base64.StdEncoding.DecodeString(parts[1])
+		fileName := fmt.Sprintf(
+			"user-%d-%d%s",
+			userID,
+			time.Now().Unix(),
+			filepath.Ext(file.Filename),
+		)
+
+		filePath := filepath.Join(uploadPath, fileName)
+
+		src, err := file.Open()
 
 		if err != nil {
 			return "", err
 		}
 
-		uploadPath := "public/uploads/profile"
+		defer src.Close()
 
-		fileName := fmt.Sprintf(
-			"user-%d-%d.jpg", userID, time.Now().Unix(),
-		)
+		dst, err := os.Create(filePath)
 
-		filePath := filepath.Join(uploadPath, fileName)
+		if err != nil {
+			return "", err
+		}
 
-		if err := os.WriteFile(filePath, imageData, 0755); err != nil {
+		defer dst.Close()
+
+		_, err = dst.ReadFrom(src)
+
+		if err != nil {
 			return "", err
 		}
 
@@ -55,7 +63,11 @@ func (s *ChangeUserProfileSrvS) ChangeUserProfileSrv(userID int, data dto.Change
 		profilePath = &path
 	}
 
-	err := s.CUPr.ChangeUserProfileRpo(userID, data, profilePath)
+	err := s.CUPr.ChangeUserProfileRpo(
+		userID,
+		data,
+		profilePath,
+	)
 
 	if err != nil {
 		return "", err

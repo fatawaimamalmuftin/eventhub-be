@@ -22,17 +22,6 @@ definitions:
       total_users:
         type: integer
     type: object
-  dto.ChangeUserProfile:
-    properties:
-      bio:
-        type: string
-      job:
-        type: string
-      location:
-        type: string
-      profile:
-        type: string
-    type: object
   dto.CreateEvent:
     properties:
       capacity:
@@ -484,15 +473,25 @@ paths:
   /events/changeuserprofile:
     patch:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Update user profile details for the authenticated user
       parameters:
-      - description: Change profile payload
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.ChangeUserProfile'
+      - description: User bio
+        in: formData
+        name: bio
+        type: string
+      - description: User location
+        in: formData
+        name: location
+        type: string
+      - description: User job
+        in: formData
+        name: job
+        type: string
+      - description: Profile image
+        in: formData
+        name: profile
+        type: file
       produces:
       - application/json
       responses:

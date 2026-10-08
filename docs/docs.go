@@ -340,7 +340,7 @@ const docTemplate = `{
                 ],
                 "description": "Update user profile details for the authenticated user",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -351,13 +351,28 @@ const docTemplate = `{
                 "summary": "Change user profile",
                 "parameters": [
                     {
-                        "description": "Change profile payload",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.ChangeUserProfile"
-                        }
+                        "type": "string",
+                        "description": "User bio",
+                        "name": "bio",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User location",
+                        "name": "location",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User job",
+                        "name": "job",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Profile image",
+                        "name": "profile",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -966,23 +981,6 @@ const docTemplate = `{
                 },
                 "total_users": {
                     "type": "integer"
-                }
-            }
-        },
-        "dto.ChangeUserProfile": {
-            "type": "object",
-            "properties": {
-                "bio": {
-                    "type": "string"
-                },
-                "job": {
-                    "type": "string"
-                },
-                "location": {
-                    "type": "string"
-                },
-                "profile": {
-                    "type": "string"
                 }
             }
         },

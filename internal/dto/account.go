@@ -9,5 +9,5 @@ type ChangeUserProfile struct {
 	Bio      *string `json:"bio"`
 	Location *string `json:"location"`
 	Job      *string `json:"job"`
-	Profile  *string `json:"profile"`
+	// Profile  *string `json:"profile"`
 }

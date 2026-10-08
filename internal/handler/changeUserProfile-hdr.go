@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"mime/multipart"
 	"net/http"
 
 	"github.com/fatawaimamalmuftin/eventhub-be/internal/dto"
@@ -9,7 +10,7 @@ import (
 )
 
 type IChangeUserProfile interface {
-	ChangeUserProfileSrv(userID int, data dto.ChangeUserProfile) (string, error)
+	ChangeUserProfileSrv(userID int, data dto.ChangeUserProfile, profile *multipart.FileHeader) (string, error)
 }
 
 type ChangeUserProfileHdrS struct {
@@ -26,10 +27,13 @@ func ChangeUserProfileHandler(cups IChangeUserProfile) *ChangeUserProfileHdrS {
 // @Summary      Change user profile
 // @Description  Update user profile details for the authenticated user
 // @Tags         Change User Profile
-// @Accept       json
+// @Accept       multipart/form-data
 // @Produce      json
 // @Security     BasicAuth
-// @Param        request  body      dto.ChangeUserProfile  true  "Change profile payload"
+// @Param        bio       formData string false "User bio"
+// @Param        location  formData string false "User location"
+// @Param        job       formData string false "User job"
+// @Param        profile   formData file false "Profile image"
 // @Success      200      {object}  dto.Res{data=string}   "profile updated successfully"
 // @Failure      400      {object}  dto.Res                "bad request error message"
 // @Failure      401      {object}  dto.Res                "invalid token"
@@ -38,12 +42,18 @@ func ChangeUserProfileHandler(cups IChangeUserProfile) *ChangeUserProfileHdrS {
 func (c *ChangeUserProfileHdrS) ChangeUserProfileHdr(ctx *gin.Context) {
 	var userProfile dto.ChangeUserProfile
 
-	if err := ctx.ShouldBindJSON(&userProfile); err != nil {
+	if err := ctx.ShouldBind(&userProfile); err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.Res{
 			Status:  false,
 			Message: err.Error(),
 		})
 		return
+	}
+
+	file, err := ctx.FormFile("profile")
+
+	if err != nil {
+		file = nil
 	}
 
 	tokenClaims, exists := ctx.Get("tokenCleims")
@@ -57,6 +67,7 @@ func (c *ChangeUserProfileHdrS) ChangeUserProfileHdr(ctx *gin.Context) {
 	}
 
 	claims, ok := tokenClaims.(jwtpkg.JWTclem)
+
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, dto.Res{
 			Status:  false,
@@ -65,7 +76,11 @@ func (c *ChangeUserProfileHdrS) ChangeUserProfileHdr(ctx *gin.Context) {
 		return
 	}
 
-	profilePath, err := c.CUPs.ChangeUserProfileSrv(claims.Id, userProfile)
+	profilePath, err := c.CUPs.ChangeUserProfileSrv(
+		claims.Id,
+		userProfile,
+		file,
+	)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, dto.Res{
