@@ -17,9 +17,6 @@ func EventDetailService(edr *repo.DbEventDetailRepo) *EventDetailSrvS {
 	}
 }
 
-func (e *EventDetailSrvS) GetEventDetail(
-	id int,
-	c context.Context,
-) (model.EventDetail, error) {
+func (e *EventDetailSrvS) GetEventDetail(id int, c context.Context) (model.EventDetail, error) {
 	return e.EDr.GetEventDetail(id, c)
 }
