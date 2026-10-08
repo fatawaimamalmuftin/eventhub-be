@@ -25,6 +25,20 @@ func JoinEventHandler(jes IJoinEvent) *JoinEventHdr {
 	}
 }
 
+// CreateJoinEventHandler godoc
+// @Summary      Join an event
+// @Description  Join an event by providing the event ID
+// @Tags         join events
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Param        eventId  path      int      true  "Event ID"
+// @Success      200      {object}  dto.Res  "joined event success"
+// @Failure      400      {object}  dto.Res  "invalid event id"
+// @Failure      401      {object}  dto.Res  "please login first / invalid token"
+// @Failure      409      {object}  dto.Res  "you already joined this event"
+// @Failure      500      {object}  dto.Res  "failed to join event"
+// @Router       /user/{eventId}/join [get]
 func (j *JoinEventHdr) CreateJoinEventHandler(c *gin.Context) {
 	tokenClaims, exists := c.Get("tokenCleims")
 

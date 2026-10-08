@@ -27,6 +27,17 @@ func EventDetailHandler(edh IEventsDetailSrv) *EventDetail {
 	}
 }
 
+// GetEventDetail godoc
+// @Summary      Get event detail
+// @Description  Get detailed information of a specific event by its ID
+// @Tags         events
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int      true  "Event ID"
+// @Success      200  {object}  dto.Res{data=model.EventDetail}  "event detail retrieved successfully"
+// @Failure      400  {object}  dto.Res                          "invalid event id"
+// @Failure      500  {object}  dto.Res                          "internal server error"
+// @Router       /events/{id} [get]
 func (e *EventDetail) GetEventDetail(c *gin.Context) {
 
 	eventID, err := strconv.Atoi(c.Param("id"))

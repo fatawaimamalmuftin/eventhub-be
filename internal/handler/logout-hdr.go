@@ -23,6 +23,17 @@ func LogoutHandler(logoutService ILogoutSrv, c *gin.Engine) *LogoutHdr {
 	}
 }
 
+// LogoutHdr godoc
+// @Summary      Logout user
+// @Description  Invalidate user bearer token for logout
+// @Tags         logout
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Success      200  {object}  dto.Res  "logout success"
+// @Failure      401  {object}  dto.Res  "invalid bearer token"
+// @Failure      500  {object}  dto.Res  "internal server error"
+// @Router       /auth/logout [post]
 func (l *LogoutHdr) LogoutHdr(c *gin.Context) {
 	authorization := c.GetHeader("Authorization")
 

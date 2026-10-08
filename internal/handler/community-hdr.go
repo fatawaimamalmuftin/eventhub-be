@@ -23,6 +23,15 @@ func ProviderCommunityHandler(cs ICommunitySrv) *CommunityHandler {
 	}
 }
 
+// GetPopularCommunities godoc
+// @Summary      Get popular communities
+// @Description  Get list of popular communities
+// @Tags         popular communities
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  dto.Res{data=[]model.PopularCommunity}  "popular communities retrieved successfully"
+// @Failure      500  {object}  dto.Res                                 "internal server error"
+// @Router       /communities/popular [get]
 func (h *CommunityHandler) GetPopularCommunities(c *gin.Context) {
 	communities, err := h.CS.GetPopularCommunities(c.Request.Context())
 	if err != nil {

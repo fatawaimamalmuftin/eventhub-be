@@ -25,6 +25,17 @@ func ProviderGetMyNotifHandler(gms IGetMyNofif) *GetMyNotifHandler {
 	}
 }
 
+// GetMyNotifHdr godoc
+// @Summary      Get user notifications
+// @Description  Get list of notifications for the authenticated user
+// @Tags         notifications
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Success      200  {object}  dto.Res{data=[]model.MyNotif}  "my notif retrieved successfully"
+// @Failure      401  {object}  dto.Res                        "please login first / invalid token"
+// @Failure      500  {object}  dto.Res                        "internal server error"
+// @Router       /notification/my [get]
 func (pr *GetMyNotifHandler) GetMyNotifHdr(c *gin.Context) {
 	tokenClaims, ok := c.Get("tokenCleims")
 	if !ok {

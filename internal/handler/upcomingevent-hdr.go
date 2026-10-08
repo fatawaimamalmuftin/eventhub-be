@@ -25,6 +25,15 @@ func UpcomingEventHandler(ucr IUpcomingEvent) *UpcomingEventS {
 	}
 }
 
+// GetUpcomingEventHandler godoc
+// @Summary      Get upcoming events
+// @Description  Get list of all upcoming events
+// @Tags         events upcomming
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  dto.Res{data=[]model.UpcomingEvent}  "success get upcoming events"
+// @Failure      500  {object}  dto.Res                             "failed to get upcoming events"
+// @Router       /events/upcoming [get]
 func (u *UpcomingEventS) GetUpcomingEventHandler(c *gin.Context) {
 
 	upcomingEvents, err := u.UCr.GetUpcomingEventService(

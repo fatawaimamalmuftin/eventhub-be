@@ -25,6 +25,20 @@ func LeaveEventHandler(les ILeaveEvent) *LeaveEventHdr {
 	}
 }
 
+// CreateLeaveEventHandler godoc
+// @Summary      Leave an event
+// @Description  Leave an event that the user previously joined
+// @Tags         leave events
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Param        eventId  path      int      true  "Event ID"
+// @Success      200      {object}  dto.Res  "left event successfully"
+// @Failure      400      {object}  dto.Res  "invalid event id"
+// @Failure      401      {object}  dto.Res  "please login first / invalid token"
+// @Failure      404      {object}  dto.Res  "you have not joined this event"
+// @Failure      500      {object}  dto.Res  "failed to leave event"
+// @Router       /user/{eventId}/leave [get]
 func (l *LeaveEventHdr) CreateLeaveEventHandler(c *gin.Context) {
 	tokenClaims, exists := c.Get("tokenCleims")
 

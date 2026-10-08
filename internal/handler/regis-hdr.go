@@ -25,6 +25,18 @@ func RegisHandler(rs IRegisSrv) *RegisHdr {
 	}
 }
 
+// Regis godoc
+// @Summary      Register new user
+// @Description  Register a new user account
+// @Tags         Regis
+// @Accept       json
+// @Produce      json
+// @Param        request  body      model.Regis  true  "Register payload"
+// @Success      200      {object}  dto.Res      "registration successful"
+// @Failure      400      {object}  dto.Res      "password length error / bad request"
+// @Failure      409      {object}  dto.Res      "user or email already exists"
+// @Failure      500      {object}  dto.Res      "binding error / internal server error"
+// @Router       /auth/regis [post]
 func (r *RegisHdr) Regis(c *gin.Context) {
 	newUser := model.Regis{}
 

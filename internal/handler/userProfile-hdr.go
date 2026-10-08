@@ -26,6 +26,18 @@ func UserProfileHandler(ups IUserProfile) *UserProfileHdr {
 	}
 }
 
+// GetUserProfileHandler godoc
+// @Summary      Get user profile
+// @Description  Get detailed profile information for the authenticated user
+// @Tags         Get user profile
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Success      200  {object}  dto.Res{data=model.UserProfile}  "success get user profile"
+// @Failure      401  {object}  dto.Res                         "please login first / invalid token"
+// @Failure      404  {object}  dto.Res                         "user not found"
+// @Failure      500  {object}  dto.Res                         "internal server error"
+// @Router       /user/profile [get]
 func (u *UserProfileHdr) GetUserProfileHandler(c *gin.Context) {
 
 	tokenClaims, exists := c.Get("tokenCleims")

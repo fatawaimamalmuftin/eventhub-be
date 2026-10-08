@@ -22,6 +22,19 @@ func ChangeUserProfileHandler(cups IChangeUserProfile) *ChangeUserProfileHdrS {
 	}
 }
 
+// ChangeUserProfileHdr godoc
+// @Summary      Change user profile
+// @Description  Update user profile details for the authenticated user
+// @Tags         Change User Profile
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Param        request  body      dto.ChangeUserProfile  true  "Change profile payload"
+// @Success      200      {object}  dto.Res{data=string}   "profile updated successfully"
+// @Failure      400      {object}  dto.Res                "bad request error message"
+// @Failure      401      {object}  dto.Res                "invalid token"
+// @Failure      500      {object}  dto.Res                "internal server error"
+// @Router       /events/changeuserprofile [patch]
 func (c *ChangeUserProfileHdrS) ChangeUserProfileHdr(ctx *gin.Context) {
 	var userProfile dto.ChangeUserProfile
 

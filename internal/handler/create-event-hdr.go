@@ -23,6 +23,18 @@ func ProviderCreateEventHandler(ces ICreateEvent) *CreateEventHandler {
 	}
 }
 
+// CreateEventHdr godoc
+// @Summary      Create a new event
+// @Description  Create a new event using JSON payload
+// @Tags         create events
+// @Accept       json
+// @Produce      json
+// @Security     BasicAuth
+// @Param        request  body      dto.CreateEvent  true  "Create event payload"
+// @Success      200      {object}  dto.Res{data=string}  "event created success"
+// @Failure      400      {object}  dto.Res               "failed to bind"
+// @Failure      500      {object}  dto.Res               "internal server error"
+// @Router       /events/createEvent [post]
 func (pr *CreateEventHandler) CreateEventHdr(c *gin.Context) {
 	var event dto.CreateEvent
 

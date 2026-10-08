@@ -29,7 +29,7 @@ func ProviderTestimonialHandler(ts ITestimonialSrv) *TestimonialHandler {
 // GetTestimonials godoc
 // @Summary      Get all testimonials
 // @Description  Get list of all testimonials
-// @Tags         testimonials
+// @Tags         Get all testimonials
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  dto.Res{data=[]model.Testimonial}  "testimonials retrieved successfully"
@@ -57,7 +57,7 @@ func (h *TestimonialHandler) GetTestimonials(c *gin.Context) {
 // CreateTestimonial godoc
 // @Summary      Create a new testimonial
 // @Description  Create a new testimonial (requires authentication)
-// @Tags         testimonials
+// @Tags         Create testimonials
 // @Accept       json
 // @Produce      json
 // @Security     BasicAuth

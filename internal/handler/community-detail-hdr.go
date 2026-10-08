@@ -25,6 +25,17 @@ func ProviderCommunityDetailHandler(cdh ICommunityDetailSrv) *CommunityDetailHan
 	}
 }
 
+// GetCommunityDetail godoc
+// @Summary      Get community detail
+// @Description  Get detailed information of a specific community by its ID
+// @Tags         communities detail
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int      true  "Community ID"
+// @Success      200  {object}  dto.Res{data=model.CommunityDetail}  "community detail retrieved successfully"
+// @Failure      400  {object}  dto.Res                              "invalid community id"
+// @Failure      500  {object}  dto.Res                              "internal server error"
+// @Router       /communities/{id} [get]
 func (h *CommunityDetailHandler) GetCommunityDetail(c *gin.Context) {
 	communityID, err := strconv.Atoi(c.Param("id"))
 

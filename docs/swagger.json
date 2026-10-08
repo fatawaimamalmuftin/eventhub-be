@@ -9,6 +9,52 @@
     "host": "localhost:5678",
     "basePath": "/",
     "paths": {
+        "/admin/dashboard": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get metrics and overview data for the admin dashboard",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Get admin dashboard information"
+                ],
+                "summary": "Get admin dashboard data",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.AdminDashboardResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "login need token",
@@ -61,6 +107,198 @@
                 }
             }
         },
+        "/auth/logout": {
+            "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Invalidate user bearer token for logout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "logout"
+                ],
+                "summary": "Logout user",
+                "responses": {
+                    "200": {
+                        "description": "logout success",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid bearer token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/regis": {
+            "post": {
+                "description": "Register a new user account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Regis"
+                ],
+                "summary": "Register new user",
+                "parameters": [
+                    {
+                        "description": "Register payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Regis"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "registration successful",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "400": {
+                        "description": "password length error / bad request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "409": {
+                        "description": "user or email already exists",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "binding error / internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/communities/popular": {
+            "get": {
+                "description": "Get list of popular communities",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "popular communities"
+                ],
+                "summary": "Get popular communities",
+                "responses": {
+                    "200": {
+                        "description": "popular communities retrieved successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/model.PopularCommunity"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/communities/{id}": {
+            "get": {
+                "description": "Get detailed information of a specific community by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "communities detail"
+                ],
+                "summary": "Get community detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Community ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "community detail retrieved successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.CommunityDetail"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "invalid community id",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
         "/events": {
             "get": {
                 "description": "don`t need token",
@@ -87,6 +325,138 @@
                 }
             }
         },
+        "/events/changeuserprofile": {
+            "patch": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Update user profile details for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Change User Profile"
+                ],
+                "summary": "Change user profile",
+                "parameters": [
+                    {
+                        "description": "Change profile payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ChangeUserProfile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "profile updated successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "bad request error message",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/events/createEvent": {
+            "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Create a new event using JSON payload",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "create events"
+                ],
+                "summary": "Create a new event",
+                "parameters": [
+                    {
+                        "description": "Create event payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateEvent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "event created success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "failed to bind",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
         "/events/my": {
             "get": {
                 "security": [
@@ -99,7 +469,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Events"
+                    "My Events"
                 ],
                 "summary": "Get my events",
                 "responses": {
@@ -124,6 +494,161 @@
                 }
             }
         },
+        "/events/upcoming": {
+            "get": {
+                "description": "Get list of all upcoming events",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events upcomming"
+                ],
+                "summary": "Get upcoming events",
+                "responses": {
+                    "200": {
+                        "description": "success get upcoming events",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/model.UpcomingEvent"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "failed to get upcoming events",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "description": "Get detailed information of a specific event by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Get event detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "event detail retrieved successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.EventDetail"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "invalid event id",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/my": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Get list of notifications for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Get user notifications",
+                "responses": {
+                    "200": {
+                        "description": "my notif retrieved successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/model.MyNotif"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "please login first / invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
         "/testimonials": {
             "get": {
                 "description": "Get list of all testimonials",
@@ -134,7 +659,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "testimonials"
+                    "Get all testimonials"
                 ],
                 "summary": "Get all testimonials",
                 "responses": {
@@ -181,7 +706,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "testimonials"
+                    "Create testimonials"
                 ],
                 "summary": "Create a new testimonial",
                 "parameters": [
@@ -222,6 +747,186 @@
                     }
                 }
             }
+        },
+        "/user/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Get detailed profile information for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Get user profile"
+                ],
+                "summary": "Get user profile",
+                "responses": {
+                    "200": {
+                        "description": "success get user profile",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Res"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.UserProfile"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "please login first / invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "404": {
+                        "description": "user not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{eventId}/join": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Join an event by providing the event ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "join events"
+                ],
+                "summary": "Join an event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "eventId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "joined event success",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid event id",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "401": {
+                        "description": "please login first / invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "409": {
+                        "description": "you already joined this event",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "failed to join event",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{eventId}/leave": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Leave an event that the user previously joined",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "leave events"
+                ],
+                "summary": "Leave an event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "eventId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "left event successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid event id",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "401": {
+                        "description": "please login first / invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "404": {
+                        "description": "you have not joined this event",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    },
+                    "500": {
+                        "description": "failed to leave event",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Res"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -238,6 +943,97 @@
                 "password": {
                     "type": "string",
                     "minLength": 6
+                }
+            }
+        },
+        "dto.AdminDashboardResponse": {
+            "type": "object",
+            "properties": {
+                "avg_fill_rate": {
+                    "type": "number"
+                },
+                "total_communities": {
+                    "type": "integer"
+                },
+                "total_events": {
+                    "type": "integer"
+                },
+                "total_users": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.ChangeUserProfile": {
+            "type": "object",
+            "properties": {
+                "bio": {
+                    "type": "string"
+                },
+                "job": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "profile": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateEvent": {
+            "type": "object",
+            "required": [
+                "capacity",
+                "category_id",
+                "description",
+                "end_time",
+                "event_format",
+                "images",
+                "location",
+                "start_time",
+                "title"
+            ],
+            "properties": {
+                "capacity": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "category_id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "community_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "event_format": {
+                    "type": "string"
+                },
+                "images": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "position_job": {
+                    "type": "string"
+                },
+                "speaker_id": {
+                    "type": "integer"
+                },
+                "speaker_name": {
+                    "type": "string"
+                },
+                "start_time": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
@@ -265,6 +1061,144 @@
                 "token": {}
             }
         },
+        "model.CommunityDetail": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "category_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "images": {
+                    "type": "string"
+                },
+                "member_count": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.EventDetail": {
+            "type": "object",
+            "properties": {
+                "attendees": {
+                    "type": "integer"
+                },
+                "capacity": {
+                    "type": "integer"
+                },
+                "communityID": {
+                    "type": "integer"
+                },
+                "communityImages": {
+                    "type": "string"
+                },
+                "communityTitle": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "endTime": {
+                    "type": "string"
+                },
+                "eventFormat": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "images": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "startTime": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.MyNotif": {
+            "type": "object",
+            "required": [
+                "id_notif"
+            ],
+            "properties": {
+                "desk": {
+                    "type": "string"
+                },
+                "id_notif": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "read_at": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.PopularCommunity": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "images": {
+                    "type": "string"
+                },
+                "member_count": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Regis": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "fullname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Testimonial": {
             "type": "object",
             "properties": {
@@ -285,6 +1219,72 @@
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.UpcomingEvent": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "attendees": {
+                    "type": "integer"
+                },
+                "capacity": {
+                    "type": "integer"
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "event_format": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "images": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "start_time": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UserProfile": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "bio": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "job": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "profile": {
+                    "type": "string"
                 }
             }
         }

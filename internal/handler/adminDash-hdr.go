@@ -23,6 +23,16 @@ func ProviderAdminDashHandler(adh IAdminDashHdr) *AdminDashHdr {
 	}
 }
 
+// GetAdminDashHdr godoc
+// @Summary      Get admin dashboard data
+// @Description  Get metrics and overview data for the admin dashboard
+// @Tags         Get admin dashboard information
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200  {object}  dto.Res{data=dto.AdminDashboardResponse}  "success"
+// @Failure      500  {object}  dto.Res                                   "internal server error"
+// @Router       /admin/dashboard [get]
 func (pr *AdminDashHdr) GetAdminDashHdr(c *gin.Context) {
 	data, err := pr.ADh.GetAdminDashSrv(c.Request.Context())
 

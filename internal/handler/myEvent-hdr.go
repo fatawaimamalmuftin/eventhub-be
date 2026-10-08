@@ -29,7 +29,7 @@ func MyEventHandler(mes IMyEvent) *MyEventHdr {
 
 // @Summary		Get my events
 // @Description	Get events created by the authenticated user
-// @Tags		Events
+// @Tags		My Events
 // @Produce		json
 // @Security	BasicAuth
 // @Success		200	{object}	dto.Res
