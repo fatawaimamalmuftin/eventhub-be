@@ -1,0 +1,5 @@
+name: "be-eventhub"
+on:
+    push:
+        branches: cicd
+jobs:
