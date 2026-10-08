@@ -118,17 +118,21 @@ definitions:
         type: integer
       capacity:
         type: integer
-      communityID:
+      categories:
+        items:
+          type: string
+        type: array
+      community_id:
         type: integer
-      communityImages:
+      community_images:
         type: string
-      communityTitle:
+      community_title:
         type: string
       description:
         type: string
-      endTime:
+      end_time:
         type: string
-      eventFormat:
+      event_format:
         type: string
       id:
         type: integer
@@ -136,7 +140,7 @@ definitions:
         type: string
       location:
         type: string
-      startTime:
+      start_time:
         type: string
       title:
         type: string

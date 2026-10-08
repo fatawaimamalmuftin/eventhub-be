@@ -1109,22 +1109,28 @@ const docTemplate = `{
                 "capacity": {
                     "type": "integer"
                 },
-                "communityID": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "community_id": {
                     "type": "integer"
                 },
-                "communityImages": {
+                "community_images": {
                     "type": "string"
                 },
-                "communityTitle": {
+                "community_title": {
                     "type": "string"
                 },
                 "description": {
                     "type": "string"
                 },
-                "endTime": {
+                "end_time": {
                     "type": "string"
                 },
-                "eventFormat": {
+                "event_format": {
                     "type": "string"
                 },
                 "id": {
@@ -1136,7 +1142,7 @@ const docTemplate = `{
                 "location": {
                     "type": "string"
                 },
-                "startTime": {
+                "start_time": {
                     "type": "string"
                 },
                 "title": {
