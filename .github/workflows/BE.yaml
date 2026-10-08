@@ -7,7 +7,7 @@ jobs:
     hallo:
         runs-on: ubuntu-24.04
         steps:
-          - name: say hallo
-            run: echo"hallo word"
-          - name: whoami
-            run: echo"i am ${{github.actor}}"
+            - name: say hallo
+              run: echo "hallo word"
+            - name: whoami
+              run: echo "i am ${{ github.actor }}"
